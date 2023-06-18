@@ -11,7 +11,6 @@ public class Vista extends JFrame {
     public Vista() {
         initWindow();
         initBoard();
-
     }
 
     private void initWindow() {
@@ -35,13 +34,13 @@ public class Vista extends JFrame {
         for (int i = 0; i < rows; i++) {
             flag = !flag;
             for (int j = 0; j < cols; j++) {
-                JPanel cell = new JPanel();
+                JPanel casilla = new JPanel();
                 if (flag) {
-                    cell.setBackground(Color.green);
+                    casilla.setBackground(Color.black);
                 } else {
-                    cell.setBackground(Color.getHSBColor(0.333f, 1f, 0.8f));
+                    casilla.setBackground(Color.black);
                 }
-                board.add(cell);
+                board.add(casilla);
                 flag = !flag;
             }
         }
