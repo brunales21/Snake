@@ -1,19 +1,17 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class SnakePart {
+public class SnakePart extends JPanel {
     private SnakePart nextPart;
-    private JPanel skin;
     private Vector2 position;
     private Vector2 direction;
 
     public SnakePart(SnakePart snakePart, Vector2 position, Vector2 direction) {
         this.nextPart = snakePart;
-        this.skin = new JPanel();
         this.position = position;
         this.direction = direction;
 
-        this.skin.setBackground(Color.BLUE);
+        setBackground(Color.BLUE);
     }
     public SnakePart(Vector2 position, Vector2 direction) {
         this(null, position, direction);
@@ -25,8 +23,7 @@ public class SnakePart {
 
     public SnakePart(Vector2 position) {
         this.position = position;
-        this.skin = new JPanel();
-        this.skin.setBackground(Color.BLUE);
+        setBackground(Color.BLUE);
     }
 
     public SnakePart() {
@@ -39,14 +36,6 @@ public class SnakePart {
 
     public void setNextPart(SnakePart nextPart) {
         this.nextPart = nextPart;
-    }
-
-    public JPanel getSkin() {
-        return skin;
-    }
-
-    public void setSkin(JPanel skin) {
-        this.skin = skin;
     }
 
     public Vector2 getPosition() {

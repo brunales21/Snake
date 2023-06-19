@@ -34,7 +34,7 @@ public class Vista extends JFrame {
         for (int i = 0; i < rows; i++) {
             flag = !flag;
             for (int j = 0; j < cols; j++) {
-                JPanel casilla = new JPanel();
+                Casilla casilla = new Casilla(new Vector2(i, j));
                 if (flag) {
                     casilla.setBackground(Color.black);
                 } else {
