@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class Vector2 {
      static final Vector2 UP = new Vector2(0, -1);
      static final Vector2 DOWN = new Vector2(0, 1);
@@ -8,6 +10,15 @@ public class Vector2 {
     private int y;
 
     public Vector2(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public Vector2() {
+
+    }
+
+    public void set(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -27,4 +38,9 @@ public class Vector2 {
     public void setY(int y) {
         this.y = y;
     }
+
+    public boolean equals(Vector2 v2) {
+        return v2.getX() == this.x && v2.getY() == this.y;
+    }
+
 }

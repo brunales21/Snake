@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 
 public class SnakePart extends JPanel {
     private SnakePart nextPart;
@@ -27,7 +28,7 @@ public class SnakePart extends JPanel {
     }
 
     public SnakePart() {
-
+        this(new Vector2());
     }
 
     public SnakePart getNextPart() {
@@ -46,6 +47,8 @@ public class SnakePart extends JPanel {
         this.position = position;
     }
 
+
+
     public Vector2 getDirection() {
         return direction;
     }
@@ -57,4 +60,6 @@ public class SnakePart extends JPanel {
     public boolean hasNextPart() {
         return nextPart != null;
     }
+
+
 }

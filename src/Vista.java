@@ -6,16 +6,20 @@ import java.awt.event.KeyListener;
 public class Vista extends JFrame {
     private JFrame window;
     private JPanel board;
+    private Component[] components;
+    private Color boardBackground;
     private int rows;
     private int cols;
     public Vista() {
         initWindow();
         initBoard();
+        components = board.getComponents();
     }
 
     private void initWindow() {
         rows = 40;
         cols = 40;
+        components = new Component[rows*cols];
         window = new JFrame("Snake");
         board = new JPanel(new GridLayout(rows, cols));
 
@@ -29,6 +33,7 @@ public class Vista extends JFrame {
     }
 
     private void initBoard() {
+        this.boardBackground = Color.black;
         boolean flag = true;
 
         for (int i = 0; i < rows; i++) {
@@ -36,13 +41,34 @@ public class Vista extends JFrame {
             for (int j = 0; j < cols; j++) {
                 Casilla casilla = new Casilla(new Vector2(i, j));
                 if (flag) {
-                    casilla.setBackground(Color.black);
+                    casilla.setBackground(boardBackground);
                 } else {
-                    casilla.setBackground(Color.black);
+                    casilla.setBackground(boardBackground);
                 }
                 board.add(casilla);
                 flag = !flag;
             }
+        }
+    }
+
+    public void reemplazarCasilla(int x, int y, JPanel nuevoPanel) {
+        int index = y * cols + x;
+        components[index] = nuevoPanel;
+        repaintBoard();
+    }
+
+    public Color getBoardBackground() {
+        return boardBackground;
+    }
+
+    public void setBoardBackground(Color boardBackground) {
+        this.boardBackground = boardBackground;
+    }
+
+    public void repaintBoard() {
+        board.removeAll();
+        for (Component component: components) {
+            board.add(component);
         }
     }
 
