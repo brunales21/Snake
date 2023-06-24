@@ -38,9 +38,23 @@ public class Vector2 {
     public void setY(int y) {
         this.y = y;
     }
-
+/*
     public boolean equals(Vector2 v2) {
         return v2.getX() == this.x && v2.getY() == this.y;
     }
 
+ */
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vector2 vector2 = (Vector2) o;
+        return x == vector2.x && y == vector2.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
+    }
 }

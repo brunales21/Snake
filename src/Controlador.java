@@ -1,28 +1,30 @@
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class Controlador implements KeyListener {
-    private static final int DELAY = 100; // Intervalo de actualización en milisegundos
+    private static int DELAY = 101; // Intervalo de actualización en milisegundos
     private Vista vista;
     private Snake snake;
     private Food food;
     private Random rand;
+    private SnakeAnimation snakeAnimation;
     private Timer timer;
     private TimerTask timerTask = new TimerTask() {
         @Override
         public void run() {
             if (isEating()) {
-                //System.out.println("come");
                 snake.grow();
-                //snake.getHead().setBackground(Color.MAGENTA);
                 placeApple();
             }
             showSnake();
-            snake.move();
+            try {
+                snake.move();
+            } catch (SnakeOutOfBounds | SelfCollideException e) {
+                //System.out.println(e.getMessage());
+                timer.cancel();
+            }
         }
     };
 
@@ -30,6 +32,8 @@ public class Controlador implements KeyListener {
     public Controlador() {
         initObjects();
         placeApple();
+        this.snakeAnimation = new SnakeAnimation(this.snake, this);
+
     }
 
     public void initObjects() {
@@ -37,15 +41,16 @@ public class Controlador implements KeyListener {
         initSnake();
         initApple();
         initTimer();
-
-        this.rand = new Random();
+        initOtherStaff();
     }
 
-    private boolean isEating() {
+
+    public boolean isEating() {
         return snake.getHead().getPosition().getX() == food.getPosition().getX() && snake.getHead().getPosition().getY() == food.getPosition().getY();
     }
 
     private void initApple() {
+        this.rand = new Random();
         this.food = new Apple();
         food.setBackground(Color.RED);
     }
@@ -69,27 +74,24 @@ public class Controlador implements KeyListener {
     private void showSnake() {
         for (int i = 0; i < snake.getSnakeLen(); i++) {
             int index = snake.getSnakeParts()[i].getPosition().getY() * vista.getCols() + snake.getSnakeParts()[i].getPosition().getX();
-            if (i < snake.getSnakeLen() - 1) {
-                vista.getBoard().getComponent(index).setBackground(snake.getSnakeParts()[i].getBackground());
-            } else {
-                vista.getBoard().getComponent(index).setBackground(vista.getBoardBackground());
-
+            try {
+                if (i < snake.getSnakeLen() - 1) {
+                    vista.getBoard().getComponent(index).setBackground(snake.getSnakeParts()[i].getBackground());
+                } else {
+                    vista.getBoard().getComponent(index).setBackground(vista.getBoardBackground());
+                }
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println("saliste");
             }
+
         }
     }
 
+    private static final Map<Integer, Vector2> map = Map.of(KeyEvent.VK_UP, Vector2.UP, KeyEvent.VK_DOWN, Vector2.DOWN, KeyEvent.VK_RIGHT, Vector2.RIGHT, KeyEvent.VK_LEFT, Vector2.LEFT);
+
     @Override
     public void keyPressed(KeyEvent e) {
-        int keyCode = e.getKeyCode();
-        if (keyCode == KeyEvent.VK_UP) {
-            snake.getHead().setDirection(Vector2.UP);
-        } else if (keyCode == KeyEvent.VK_DOWN) {
-            snake.getHead().setDirection(Vector2.DOWN);
-        } else if (keyCode == KeyEvent.VK_LEFT) {
-            snake.getHead().setDirection(Vector2.LEFT);
-        } else if (keyCode == KeyEvent.VK_RIGHT) {
-            snake.getHead().setDirection(Vector2.RIGHT);
-        }
+        snake.getHead().setDirection(map.get(e.getKeyCode()));
     }
 
     @Override
@@ -107,12 +109,15 @@ public class Controlador implements KeyListener {
     }
 
     public void initSnake() {
-        this.snake = new Snake();
+        this.snake = new Snake(this.vista.getBoard());
     }
 
     public void initTimer() {
         this.timer = new Timer();
         timer.scheduleAtFixedRate(timerTask, 0, DELAY);
+    }
+    private void initOtherStaff() {
         this.vista.getWindow().addKeyListener(this);
     }
+
 }
