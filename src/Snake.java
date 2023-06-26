@@ -5,7 +5,7 @@ public class Snake {
     private JPanel board;
     private SnakePart[] snakeParts;
     private SnakePart head;
-    private final int MAX_LENGTH = 50;
+    private final int MAX_LENGTH = 500;
     private final int STARTING_LENGTH = 6;
     private int snakeLen = STARTING_LENGTH;
     private final Vector2 startingPosition = new Vector2(13, 20);
@@ -32,12 +32,15 @@ public class Snake {
         }
     }
 
-    public void grow() {
-        Vector2 direction = head.getDirection();
-        snakeParts[snakeLen] = new SnakePart();
-        snakeParts[snakeLen].setNextPart(snakeParts[snakeLen-1]);
-        snakeParts[snakeLen].getPosition().set(snakeParts[snakeLen].getNextPart().getPosition().getX()-direction.getX(), snakeParts[snakeLen].getNextPart().getPosition().getY()-direction.getY());
-        snakeLen++;
+    public void grow(int n) {
+        for (int i = 0; i < n; i++) {
+            Vector2 direction = head.getDirection();
+            snakeParts[snakeLen] = new SnakePart();
+            snakeParts[snakeLen].setNextPart(snakeParts[snakeLen-1]);
+            snakeParts[snakeLen].getPosition().set(snakeParts[snakeLen].getNextPart().getPosition().getX()-direction.getX(), snakeParts[snakeLen].getNextPart().getPosition().getY()-direction.getY());
+            snakeLen++;
+        }
+
     }
 
 

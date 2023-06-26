@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.*;
@@ -15,34 +17,43 @@ public class Controlador implements KeyListener {
         @Override
         public void run() {
             if (isEating()) {
-                snake.grow();
+                snake.grow(2);
                 placeApple();
             }
             showSnake();
             try {
                 snake.move();
             } catch (SnakeOutOfBounds | SelfCollideException e) {
-                //System.out.println(e.getMessage());
+                vista.instanceEndWindow();
                 timer.cancel();
+
             }
         }
     };
 
 
     public Controlador() {
-        initObjects();
-        placeApple();
-        this.snakeAnimation = new SnakeAnimation(this.snake, this);
-
+        startGame();
+        vista.getPlayAgainButton().addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                vista.getBoard().setVisible(true);
+                vista.getEndWindow().setVisible(false);
+                startGame();
+            }
+        });
     }
 
-    public void initObjects() {
+    public void startGame() {
         initVista();
         initSnake();
         initApple();
+        placeApple();
         initTimer();
+        initAnimation();
         initOtherStaff();
     }
+
+
 
 
     public boolean isEating() {
@@ -81,7 +92,7 @@ public class Controlador implements KeyListener {
                     vista.getBoard().getComponent(index).setBackground(vista.getBoardBackground());
                 }
             } catch (ArrayIndexOutOfBoundsException e) {
-                System.out.println("saliste");
+                //System.out.println("saliste");
             }
 
         }
@@ -112,12 +123,16 @@ public class Controlador implements KeyListener {
         this.snake = new Snake(this.vista.getBoard());
     }
 
-    public void initTimer() {
-        this.timer = new Timer();
+    private void initTimer() {
+        timer = new Timer();
         timer.scheduleAtFixedRate(timerTask, 0, DELAY);
     }
+
     private void initOtherStaff() {
         this.vista.getWindow().addKeyListener(this);
     }
 
+    private void initAnimation() {
+        this.snakeAnimation = new SnakeAnimation(this.snake, this);
+    }
 }
