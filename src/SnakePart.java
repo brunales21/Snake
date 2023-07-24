@@ -4,7 +4,6 @@ import java.util.Objects;
 
 public class SnakePart extends JPanel {
     private SnakePart nextPart;
-    private final Color color = new Color(0, 200, 0);
     private Vector2 position;
     private Vector2 direction;
 

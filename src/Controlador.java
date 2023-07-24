@@ -1,8 +1,12 @@
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
 import java.util.*;
 
 public class Controlador implements KeyListener {
@@ -17,6 +21,7 @@ public class Controlador implements KeyListener {
         @Override
         public void run() {
             if (isEating()) {
+                playSound("bonus.wav");
                 snake.grow(2);
                 placeApple();
             }
@@ -24,7 +29,10 @@ public class Controlador implements KeyListener {
             try {
                 snake.move();
             } catch (SnakeOutOfBounds | SelfCollideException e) {
+                playSound("fail.wav");
+                threadSleep(1);
                 vista.instanceEndWindow();
+                vista.showScore(snake.getSnakeLen()-snake.getStartingLen());
                 timer.cancel();
 
             }
@@ -53,8 +61,20 @@ public class Controlador implements KeyListener {
         initOtherStaff();
     }
 
+    public static void playSound(String name) {
+        File soundFile = new File("sounds/"+name);
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
 
-
+            //clip.close();
+            //audioInputStream.close();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
     public boolean isEating() {
         return snake.getHead().getPosition().getX() == food.getPosition().getX() && snake.getHead().getPosition().getY() == food.getPosition().getY();
@@ -134,5 +154,13 @@ public class Controlador implements KeyListener {
 
     private void initAnimation() {
         this.snakeAnimation = new SnakeAnimation(this.snake, this);
+    }
+
+    public void threadSleep(int n) {
+        try {
+            Thread.sleep(n* 1000L);
+        } catch (InterruptedException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }

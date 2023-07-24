@@ -102,4 +102,8 @@ public class Snake {
     public void setSnakeLen(int snakeLen) {
         this.snakeLen = snakeLen;
     }
+
+    public int getStartingLen() {
+        return STARTING_LENGTH;
+    }
 }

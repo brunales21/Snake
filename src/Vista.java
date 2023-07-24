@@ -49,6 +49,8 @@ public class Vista extends JFrame {
         text.setText("Game Over");
         text.setFont(text.getFont().deriveFont(Font.BOLD, 24));
 
+
+
         StyledDocument doc = text.getStyledDocument();
         SimpleAttributeSet centerStyle = new SimpleAttributeSet();
         StyleConstants.setAlignment(centerStyle, StyleConstants.ALIGN_CENTER);
@@ -74,8 +76,21 @@ public class Vista extends JFrame {
 
  */
 
-        this.endWindow.add(text, BorderLayout.CENTER);
+        this.endWindow.add(text, BorderLayout.NORTH);
 
+        this.endWindow.revalidate();
+        this.endWindow.repaint();
+    }
+
+    public void showScore(int n) {
+        JTextPane scoreText = new JTextPane();
+        scoreText.setPreferredSize(new Dimension(200, 100));
+        scoreText.setBackground(Color.BLACK);
+        scoreText.setForeground(Color.WHITE);
+        scoreText.setText("Score: "+ n);
+        scoreText.setFont(scoreText.getFont().deriveFont(Font.BOLD, 24));
+
+        this.endWindow.add(scoreText, BorderLayout.AFTER_LINE_ENDS);
         this.endWindow.revalidate();
         this.endWindow.repaint();
     }
