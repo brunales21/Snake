@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class Snake {
+public class Snake extends Thread {
     private JPanel board;
     private SnakePart[] snakeParts;
     private SnakePart head;
@@ -20,15 +20,79 @@ public class Snake {
         head.setBackground(Color.BLUE);
     }
 
+
+    private Food apple;
+
+    @Override
+    public void run() {
+        do {
+            int appleXPos = apple.getPosition().getX();
+            int appleYPos = apple.getPosition().getY();
+            while (!isEating()) {
+                goForApple(appleXPos, appleYPos);
+            }
+            System.out.println("come");
+        } while (true);
+    }
+
+
+    private void moveTo(Vector2 direction) {
+        head.setDirection(direction);
+    }
+
+    private boolean appleIsTowardsUp(int appleYPos) {
+        return appleYPos < head.getPosition().getY();
+    }
+
+    private boolean appleIsTowardsLeft(int appleXPos) {
+        return appleXPos < head.getPosition().getX();
+    }
+
+    private boolean appleIsTowardsRight(int appleXPos) {
+        return appleXPos > head.getPosition().getX();
+    }
+
+    private boolean appleIsTowardsDown(int appleYPos) {
+        return appleYPos > head.getPosition().getY();
+    }
+
+    private void goForApple(int appleXPos, int appleYPos) {
+        if (appleYPos < head.getPosition().getY() && head.IsValidDirection(Vector2.UP)) {
+            head.setDirection(Vector2.UP);
+        } else if (appleYPos > head.getPosition().getY() && head.IsValidDirection(Vector2.DOWN)) {
+            head.setDirection(Vector2.DOWN);
+        } else if (appleXPos > head.getPosition().getX() && head.IsValidDirection(Vector2.RIGHT)) {
+            head.setDirection(Vector2.RIGHT);
+        } else if (appleXPos < head.getPosition().getX() && head.IsValidDirection(Vector2.LEFT)) {
+            head.setDirection(Vector2.LEFT);
+        }
+
+
+    }
+
+    private boolean coincideX() {
+        return head.getPosition().getX() == apple.getPosition().getX();
+    }
+
+    private boolean coincideY() {
+        return head.getPosition().getY() == apple.getPosition().getY();
+    }
+
+    private boolean isEating() {
+        return coincideX() && coincideY();
+    }
+
+
     public void initParts() {
         snakeParts = new SnakePart[MAX_LENGTH];
         for (int i = 0; i < STARTING_LENGTH; i++) {
-            snakeParts[i] = new SnakePart(new Vector2(startingPosition.getX()-i, startingPosition.getY()));
+            snakeParts[i] = new SnakePart(new Vector2(startingPosition.getX() - i, startingPosition.getY()));
         }
     }
+
     public void initSnake() {
-        for (int i = 0; i < STARTING_LENGTH-1; i++) {
-            snakeParts[STARTING_LENGTH-i-1].setNextPart(snakeParts[STARTING_LENGTH-i-2]);
+        for (int i = 0; i < STARTING_LENGTH - 1; i++) {
+            snakeParts[STARTING_LENGTH - i - 1].setNextPart(snakeParts[STARTING_LENGTH - i - 2]);
         }
     }
 
@@ -36,8 +100,8 @@ public class Snake {
         for (int i = 0; i < n; i++) {
             Vector2 direction = head.getDirection();
             snakeParts[snakeLen] = new SnakePart();
-            snakeParts[snakeLen].setNextPart(snakeParts[snakeLen-1]);
-            snakeParts[snakeLen].getPosition().set(snakeParts[snakeLen].getNextPart().getPosition().getX()-direction.getX(), snakeParts[snakeLen].getNextPart().getPosition().getY()-direction.getY());
+            snakeParts[snakeLen].setNextPart(snakeParts[snakeLen - 1]);
+            snakeParts[snakeLen].getPosition().set(snakeParts[snakeLen].getNextPart().getPosition().getX() - direction.getX(), snakeParts[snakeLen].getNextPart().getPosition().getY() - direction.getY());
             snakeLen++;
         }
 
@@ -45,11 +109,11 @@ public class Snake {
 
 
     public void move() throws SnakeOutOfBounds, SelfCollideException {
-        for (int i = snakeLen-1; i >= 0; i--) {
+        for (int i = snakeLen - 1; i >= 0; i--) {
             if (i > 0) {
                 snakeParts[i].setPosition(snakeParts[i].getNextPart().getPosition());
             } else {
-                head.setPosition(new Vector2(head.getPosition().getX()+head.getDirection().getX(), head.getPosition().getY()+head.getDirection().getY()));
+                head.setPosition(new Vector2(head.getPosition().getX() + head.getDirection().getX(), head.getPosition().getY() + head.getDirection().getY()));
                 if (collidesItSelf()) {
                     throw new SelfCollideException();
                 }
@@ -62,7 +126,7 @@ public class Snake {
     }
 
     private boolean isOutOfBounds(Vector2 position) {
-        return position.getX()> ((GridLayout)board.getLayout()).getRows() || position.getX()<0 || position.getY()>((GridLayout)board.getLayout()).getColumns() || position.getY()<0;
+        return position.getX() > ((GridLayout) board.getLayout()).getRows() || position.getX() < 0 || position.getY() > ((GridLayout) board.getLayout()).getColumns() || position.getY() < 0;
     }
 
     private boolean collidesItSelf() {
@@ -73,6 +137,7 @@ public class Snake {
         }
         return false;
     }
+
     public void eatEffect() {
         for (int i = 0; i < getSnakeLen(); i++) {
             getSnakeParts()[i].setBackground(Color.MAGENTA);
@@ -88,9 +153,11 @@ public class Snake {
     public SnakePart getHead() {
         return head;
     }
+
     public void setHead(SnakePart head) {
         this.head = head;
     }
+
     public SnakePart[] getSnakeParts() {
         return snakeParts;
     }
@@ -105,5 +172,13 @@ public class Snake {
 
     public int getStartingLen() {
         return STARTING_LENGTH;
+    }
+
+    public Food getApple() {
+        return apple;
+    }
+
+    public void setApple(Food apple) {
+        this.apple = apple;
     }
 }

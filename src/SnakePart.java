@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.Objects;
 
 public class SnakePart extends JPanel {
     private SnakePart nextPart;
@@ -53,8 +52,16 @@ public class SnakePart extends JPanel {
         return direction;
     }
 
+    public boolean IsValidDirection(Vector2 direction) {
+        if (this.direction == null) {
+            return true;
+        }
+        return !((direction.equals(Vector2.UP) && this.direction.equals(Vector2.DOWN)) || (direction.equals(Vector2.DOWN) && this.direction.equals(Vector2.UP)) || (direction.equals(Vector2.RIGHT) && this.direction.equals(Vector2.LEFT)) || (direction.equals(Vector2.LEFT) && this.direction.equals(Vector2.RIGHT)));
+    }
     public void setDirection(Vector2 direction) {
-        this.direction = direction;
+        if (IsValidDirection(direction)) {
+            this.direction = direction;
+        }
     }
 
     public boolean hasNextPart() {

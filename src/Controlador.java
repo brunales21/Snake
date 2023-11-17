@@ -10,7 +10,7 @@ import java.io.File;
 import java.util.*;
 
 public class Controlador implements KeyListener {
-    private static int DELAY = 101; // Intervalo de actualización en milisegundos
+    private static int DELAY = 100; // Intervalo de actualización en milisegundos
     private Vista vista;
     private Snake snake;
     private Food food;
@@ -20,9 +20,10 @@ public class Controlador implements KeyListener {
     private TimerTask timerTask = new TimerTask() {
         @Override
         public void run() {
+            snake.setApple(food);
             if (isEating()) {
                 playSound("bonus.wav");
-                snake.grow(2);
+                snake.grow(0);
                 placeApple();
             }
             showSnake();
@@ -59,6 +60,7 @@ public class Controlador implements KeyListener {
         initTimer();
         initAnimation();
         initOtherStaff();
+        snake.start();
     }
 
     public static void playSound(String name) {
@@ -91,6 +93,7 @@ public class Controlador implements KeyListener {
             food.getPosition().set(rand.nextInt(vista.getRows()), rand.nextInt(vista.getCols()));
         } while (!canPlaceApple(food.getPosition()));
         vista.getBoard().getComponent(getIndex(food.getPosition())).setBackground(food.getBackground());
+        snake.setApple(food);
     }
 
     private boolean canPlaceApple(Vector2 position) {
