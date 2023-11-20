@@ -2,16 +2,20 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Snake extends Thread {
-    private JPanel board;
-    private SnakePart[] snakeParts;
-    private SnakePart head;
-    private final int MAX_LENGTH = 500;
+    private int delay;
+    private final int MAX_LENGTH = 60;
     private final int STARTING_LENGTH = 6;
-    private int snakeLen = STARTING_LENGTH;
     private final Vector2 startingPosition = new Vector2(13, 20);
     private final Vector2 startingDirection = Vector2.RIGHT;
+    private final JPanel board;
+    private SnakePart[] snakeParts;
+    private SnakePart head;
+    private int snakeLen = STARTING_LENGTH;
+    private Food apple;
 
-    public Snake(JPanel board) {
+
+    public Snake(JPanel board, int delay) {
+        this.delay = delay;
         this.board = board;
         initParts();
         initSnake();
@@ -21,8 +25,7 @@ public class Snake extends Thread {
     }
 
 
-    private Food apple;
-
+    // Serpiente que se busca manzanas sola
     @Override
     public void run() {
         do {
@@ -30,8 +33,9 @@ public class Snake extends Thread {
             int appleYPos = apple.getPosition().getY();
             while (!isEating()) {
                 goForApple(appleXPos, appleYPos);
+                ThreadUtils.esperar(delay/5);
             }
-            System.out.println("come");
+            ThreadUtils.esperar(10);
         } while (true);
     }
 
@@ -57,14 +61,54 @@ public class Snake extends Thread {
     }
 
     private void goForApple(int appleXPos, int appleYPos) {
-        if (appleYPos < head.getPosition().getY() && head.IsValidDirection(Vector2.UP)) {
-            head.setDirection(Vector2.UP);
-        } else if (appleYPos > head.getPosition().getY() && head.IsValidDirection(Vector2.DOWN)) {
-            head.setDirection(Vector2.DOWN);
-        } else if (appleXPos > head.getPosition().getX() && head.IsValidDirection(Vector2.RIGHT)) {
-            head.setDirection(Vector2.RIGHT);
-        } else if (appleXPos < head.getPosition().getX() && head.IsValidDirection(Vector2.LEFT)) {
-            head.setDirection(Vector2.LEFT);
+        if (appleIsTowardsUp(appleYPos)) {
+            if (head.getDirection().equals(Vector2.DOWN)) {
+                if (!isOutOfBounds(Vector2.sum(head.getPosition(), Vector2.RIGHT))) {
+                    head.setDirection(Vector2.RIGHT);
+                } else {
+                    head.setDirection(Vector2.LEFT);
+                }
+            } else {
+                head.setDirection(Vector2.UP);
+            }
+        } else if (appleIsTowardsDown(appleYPos)) {
+            if (head.getDirection().equals(Vector2.UP)) {
+                if (!isOutOfBounds(Vector2.sum(head.getPosition(), Vector2.RIGHT))) {
+                    head.setDirection(Vector2.RIGHT);
+                } else {
+                    head.setDirection(Vector2.LEFT);
+                }
+            } else {
+                head.setDirection(Vector2.DOWN);
+            }
+        } else if (appleIsTowardsRight(appleXPos)) {
+            if (head.getDirection().equals(Vector2.LEFT)) {
+                if (!isOutOfBounds(Vector2.sum(head.getPosition(), Vector2.UP))) {
+                    head.setDirection(Vector2.UP);
+                    System.out.println("arriba");
+                } else {
+                    head.setDirection(Vector2.DOWN);
+                    System.out.println("abajo");
+                }
+
+                System.out.println(head.getDirection());
+            } else {
+                head.setDirection(Vector2.RIGHT);
+
+            }
+        } else if (appleIsTowardsLeft(appleXPos)) {
+            if (head.getDirection().equals(Vector2.RIGHT)) {
+                if (!isOutOfBounds(Vector2.sum(head.getPosition(), Vector2.UP))) {
+                    head.setDirection(Vector2.UP);
+                    System.out.println("arriba");
+                } else {
+                    head.setDirection(Vector2.DOWN);
+                    System.out.println("abajo");
+                }
+                System.out.println(head.getDirection());
+            } else {
+                head.setDirection(Vector2.LEFT);
+            }
         }
 
 
@@ -142,7 +186,7 @@ public class Snake extends Thread {
         for (int i = 0; i < getSnakeLen(); i++) {
             getSnakeParts()[i].setBackground(Color.MAGENTA);
             try {
-                Thread.sleep(50);
+                Thread.sleep(25);
             } catch (InterruptedException e) {
                 throw new RuntimeException();
             }

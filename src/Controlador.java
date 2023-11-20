@@ -23,7 +23,7 @@ public class Controlador implements KeyListener {
             snake.setApple(food);
             if (isEating()) {
                 playSound("bonus.wav");
-                snake.grow(0);
+                snake.grow(1);
                 placeApple();
             }
             showSnake();
@@ -31,7 +31,7 @@ public class Controlador implements KeyListener {
                 snake.move();
             } catch (SnakeOutOfBounds | SelfCollideException e) {
                 playSound("fail.wav");
-                threadSleep(1);
+                ThreadUtils.esperar(2000);
                 vista.instanceEndWindow();
                 vista.showScore(snake.getSnakeLen()-snake.getStartingLen());
                 timer.cancel();
@@ -60,7 +60,7 @@ public class Controlador implements KeyListener {
         initTimer();
         initAnimation();
         initOtherStaff();
-        snake.start();
+        //snake.start();
     }
 
     public static void playSound(String name) {
@@ -74,7 +74,7 @@ public class Controlador implements KeyListener {
             //clip.close();
             //audioInputStream.close();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
         }
     }
 
@@ -90,7 +90,9 @@ public class Controlador implements KeyListener {
 
     private void placeApple() {
         do {
-            food.getPosition().set(rand.nextInt(vista.getRows()), rand.nextInt(vista.getCols()));
+            //food.getPosition().set(rand.nextInt(vista.getRows()), rand.nextInt(vista.getCols()));
+            food.getPosition().set(rand.nextInt(1, vista.getRows()-1), rand.nextInt(1, vista.getCols()-1));
+
         } while (!canPlaceApple(food.getPosition()));
         vista.getBoard().getComponent(getIndex(food.getPosition())).setBackground(food.getBackground());
         snake.setApple(food);
@@ -143,7 +145,7 @@ public class Controlador implements KeyListener {
     }
 
     public void initSnake() {
-        this.snake = new Snake(this.vista.getBoard());
+        this.snake = new Snake(this.vista.getBoard(), DELAY);
     }
 
     private void initTimer() {

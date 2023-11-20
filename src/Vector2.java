@@ -23,6 +23,10 @@ public class Vector2 {
         this.y = y;
     }
 
+    public static Vector2 sum(Vector2 p1, Vector2 p2) {
+        return new Vector2(p1.x+ p2.x, p1.y+ p2.y);
+    }
+
     public int getX() {
         return x;
     }
@@ -56,5 +60,13 @@ public class Vector2 {
     @Override
     public int hashCode() {
         return Objects.hash(x, y);
+    }
+
+    @Override
+    public String toString() {
+        return "Vector2{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
     }
 }
