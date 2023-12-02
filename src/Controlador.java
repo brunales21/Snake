@@ -10,7 +10,7 @@ import java.io.File;
 import java.util.*;
 
 public class Controlador implements KeyListener {
-    private static int DELAY = 100; // Intervalo de actualización en milisegundos
+    private static int DELAY = 15; // Intervalo de actualización en milisegundos
     private Vista vista;
     private Snake snake;
     private Food food;
@@ -22,7 +22,7 @@ public class Controlador implements KeyListener {
         public void run() {
             snake.setApple(food);
             if (isEating()) {
-                playSound("bonus.wav");
+                //playSound("bonus.wav");
                 snake.grow(1);
                 placeApple();
             }
@@ -30,7 +30,7 @@ public class Controlador implements KeyListener {
             try {
                 snake.move();
             } catch (SnakeOutOfBounds | SelfCollideException e) {
-                playSound("fail.wav");
+                //playSound("fail.wav");
                 ThreadUtils.esperar(2000);
                 vista.instanceEndWindow();
                 vista.showScore(snake.getSnakeLen()-snake.getStartingLen());

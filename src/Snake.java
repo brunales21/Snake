@@ -3,7 +3,7 @@ import java.awt.*;
 
 public class Snake extends Thread {
     private int delay;
-    private final int MAX_LENGTH = 60;
+    private final int MAX_LENGTH = 600;
     private final int STARTING_LENGTH = 6;
     private final Vector2 startingPosition = new Vector2(13, 20);
     private final Vector2 startingDirection = Vector2.RIGHT;
