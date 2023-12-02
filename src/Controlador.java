@@ -10,7 +10,7 @@ import java.io.File;
 import java.util.*;
 
 public class Controlador implements KeyListener {
-    private static int DELAY = 15; // Intervalo de actualización en milisegundos
+    private static int DELAY = 90; // Intervalo de actualización en milisegundos
     private Vista vista;
     private Snake snake;
     private Food food;
