@@ -33,7 +33,7 @@ public class Snake extends Thread {
             int appleYPos = apple.getPosition().getY();
             while (!isEating()) {
                 goForApple(appleXPos, appleYPos);
-                ThreadUtils.esperar(delay/5);
+                ThreadUtils.esperar(delay);
             }
             ThreadUtils.esperar(10);
         } while (true);
@@ -85,13 +85,10 @@ public class Snake extends Thread {
             if (head.getDirection().equals(Vector2.LEFT)) {
                 if (!isOutOfBounds(Vector2.sum(head.getPosition(), Vector2.UP))) {
                     head.setDirection(Vector2.UP);
-                    System.out.println("arriba");
                 } else {
                     head.setDirection(Vector2.DOWN);
-                    System.out.println("abajo");
                 }
 
-                System.out.println(head.getDirection());
             } else {
                 head.setDirection(Vector2.RIGHT);
 
@@ -100,12 +97,9 @@ public class Snake extends Thread {
             if (head.getDirection().equals(Vector2.RIGHT)) {
                 if (!isOutOfBounds(Vector2.sum(head.getPosition(), Vector2.UP))) {
                     head.setDirection(Vector2.UP);
-                    System.out.println("arriba");
                 } else {
                     head.setDirection(Vector2.DOWN);
-                    System.out.println("abajo");
                 }
-                System.out.println(head.getDirection());
             } else {
                 head.setDirection(Vector2.LEFT);
             }

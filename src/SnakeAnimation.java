@@ -5,11 +5,11 @@ import java.util.TimerTask;
 public class SnakeAnimation {
     private Timer timer;
     private Snake snake;
-    private Controlador controlador;
+    private SnakeGame controlador;
     private Color color = new Color(0, 155, 0);
 
 
-    public SnakeAnimation(Snake snake, Controlador controlador) {
+    public SnakeAnimation(Snake snake, SnakeGame controlador) {
         this.snake = snake;
         this.controlador = controlador;
         initTimer();

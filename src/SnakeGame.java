@@ -2,15 +2,14 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.util.*;
 
-public class Controlador implements KeyListener {
-    private static int DELAY = 90; // Intervalo de actualización en milisegundos
+public class SnakeGame implements KeyListener {
+    private boolean autoMode;
+    private static int DELAY = 14; // Intervalo de actualización en milisegundos
     private Vista vista;
     private Snake snake;
     private Food food;
@@ -20,39 +19,51 @@ public class Controlador implements KeyListener {
     private TimerTask timerTask = new TimerTask() {
         @Override
         public void run() {
-            snake.setApple(food);
-            if (isEating()) {
-                //playSound("bonus.wav");
-                snake.grow(1);
-                placeApple();
-            }
-            showSnake();
-            try {
-                snake.move();
-            } catch (SnakeOutOfBounds | SelfCollideException e) {
-                //playSound("fail.wav");
-                ThreadUtils.esperar(2000);
-                vista.instanceEndWindow();
-                vista.showScore(snake.getSnakeLen()-snake.getStartingLen());
-                timer.cancel();
-
+            if (autoMode) {
+                modoEspectador();
+            } else {
+                singlePlayer();
             }
         }
     };
 
-
-    public Controlador() {
-        startGame();
-        vista.getPlayAgainButton().addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                vista.getBoard().setVisible(true);
-                vista.getEndWindow().setVisible(false);
-                startGame();
-            }
-        });
+    private void singlePlayer() {
+        snake.setApple(food);
+        if (isEating()) {
+            playSound("bonus1.wav");
+            snake.grow(1);
+            placeApple();
+        }
+        showSnake();
+        try {
+            snake.move();
+        } catch (SnakeOutOfBounds | SelfCollideException e) {
+            gameOverRutine();
+        }
     }
 
-    public void startGame() {
+    private void modoEspectador() {
+        snake.setApple(food);
+        if (isEating()) {
+            playSound("bonus1.wav");
+            snake.grow(1);
+            placeApple();
+        }
+        showSnake();
+        try {
+            snake.move();
+        } catch (SnakeOutOfBounds e) {
+            gameOverRutine();
+        } catch (SelfCollideException ignore) {
+            //ignore
+        }
+    }
+    public SnakeGame(boolean auto) {
+        this.autoMode = auto;
+        startGame(auto);
+    }
+
+    public void startGame(boolean auto) {
         initVista();
         initSnake();
         initApple();
@@ -60,7 +71,9 @@ public class Controlador implements KeyListener {
         initTimer();
         initAnimation();
         initOtherStaff();
-        //snake.start();
+        if (auto) {
+            snake.start();
+        }
     }
 
     public static void playSound(String name) {
@@ -90,9 +103,7 @@ public class Controlador implements KeyListener {
 
     private void placeApple() {
         do {
-            //food.getPosition().set(rand.nextInt(vista.getRows()), rand.nextInt(vista.getCols()));
             food.getPosition().set(rand.nextInt(1, vista.getRows()-1), rand.nextInt(1, vista.getCols()-1));
-
         } while (!canPlaceApple(food.getPosition()));
         vista.getBoard().getComponent(getIndex(food.getPosition())).setBackground(food.getBackground());
         snake.setApple(food);
@@ -167,5 +178,13 @@ public class Controlador implements KeyListener {
         } catch (InterruptedException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    public void gameOverRutine() {
+        playSound("fail.wav");
+        ThreadUtils.esperar(2000);
+        vista.instanceEndWindow();
+        vista.showScore(snake.getSnakeLen()-snake.getStartingLen());
+        timer.cancel();
     }
 }
