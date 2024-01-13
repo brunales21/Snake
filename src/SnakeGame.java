@@ -9,7 +9,7 @@ import java.util.*;
 
 public class SnakeGame implements KeyListener {
     private boolean autoMode;
-    private static int DELAY = 14; // Intervalo de actualización en milisegundos
+    private static int DELAY = 35; // Intervalo de actualización en milisegundos
     private Vista vista;
     private Snake snake;
     private Food food;
@@ -46,7 +46,7 @@ public class SnakeGame implements KeyListener {
         snake.setApple(food);
         if (isEating()) {
             playSound("bonus1.wav");
-            snake.grow(1);
+            snake.grow(0);
             placeApple();
         }
         showSnake();

@@ -33,9 +33,8 @@ public class Snake extends Thread {
             int appleYPos = apple.getPosition().getY();
             while (!isEating()) {
                 goForApple(appleXPos, appleYPos);
-                ThreadUtils.esperar(delay);
             }
-            ThreadUtils.esperar(10);
+            System.out.println();
         } while (true);
     }
 
@@ -61,51 +60,15 @@ public class Snake extends Thread {
     }
 
     private void goForApple(int appleXPos, int appleYPos) {
-        if (appleIsTowardsUp(appleYPos)) {
-            if (head.getDirection().equals(Vector2.DOWN)) {
-                if (!isOutOfBounds(Vector2.sum(head.getPosition(), Vector2.RIGHT))) {
-                    head.setDirection(Vector2.RIGHT);
-                } else {
-                    head.setDirection(Vector2.LEFT);
-                }
-            } else {
-                head.setDirection(Vector2.UP);
-            }
-        } else if (appleIsTowardsDown(appleYPos)) {
-            if (head.getDirection().equals(Vector2.UP)) {
-                if (!isOutOfBounds(Vector2.sum(head.getPosition(), Vector2.RIGHT))) {
-                    head.setDirection(Vector2.RIGHT);
-                } else {
-                    head.setDirection(Vector2.LEFT);
-                }
-            } else {
-                head.setDirection(Vector2.DOWN);
-            }
-        } else if (appleIsTowardsRight(appleXPos)) {
-            if (head.getDirection().equals(Vector2.LEFT)) {
-                if (!isOutOfBounds(Vector2.sum(head.getPosition(), Vector2.UP))) {
-                    head.setDirection(Vector2.UP);
-                } else {
-                    head.setDirection(Vector2.DOWN);
-                }
-
-            } else {
-                head.setDirection(Vector2.RIGHT);
-
-            }
-        } else if (appleIsTowardsLeft(appleXPos)) {
-            if (head.getDirection().equals(Vector2.RIGHT)) {
-                if (!isOutOfBounds(Vector2.sum(head.getPosition(), Vector2.UP))) {
-                    head.setDirection(Vector2.UP);
-                } else {
-                    head.setDirection(Vector2.DOWN);
-                }
-            } else {
-                head.setDirection(Vector2.LEFT);
-            }
+        if (appleYPos < head.getPosition().getY()) {
+            head.setDirection(Vector2.UP);
+        } else if (appleYPos > head.getPosition().getY()) {
+            head.setDirection(Vector2.DOWN);
+        } else if (appleXPos > head.getPosition().getX()) {
+            head.setDirection(Vector2.RIGHT);
+        } else if (appleXPos < head.getPosition().getX()) {
+            head.setDirection(Vector2.LEFT);
         }
-
-
     }
 
     private boolean coincideX() {
