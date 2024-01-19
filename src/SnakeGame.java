@@ -103,7 +103,7 @@ public class SnakeGame implements KeyListener {
 
     private void placeApple() {
         do {
-            food.getPosition().set(rand.nextInt(1, vista.getRows()-1), rand.nextInt(1, vista.getCols()-1));
+            food.getPosition().set(rand.nextInt(vista.getRows()-2)+1, rand.nextInt(vista.getCols()-2)+1);
         } while (!canPlaceApple(food.getPosition()));
         vista.getBoard().getComponent(getIndex(food.getPosition())).setBackground(food.getBackground());
         snake.setApple(food);
@@ -127,10 +127,9 @@ public class SnakeGame implements KeyListener {
                 } else {
                     vista.getBoard().getComponent(index).setBackground(vista.getBoardBackground());
                 }
-            } catch (ArrayIndexOutOfBoundsException e) {
-                //System.out.println("saliste");
+            } catch (ArrayIndexOutOfBoundsException ignore) {
+                //ignore
             }
-
         }
     }
 
